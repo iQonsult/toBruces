@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoApp</title>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="main.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <section class="todoapp">
+        <h1>toBruces</h1>
+        <header class="header">
+            <input class="new-todo" autofocus autocomplete="off" placeholder="What needs to get Bruced?"
+                v-model="newTodo" @keyup.enter="addTodo" />
+        </header>
+        <section class="main" v-show="todoList.length">
+            <input id="toggle-all" class="toggle-all" type="checkbox" v-model="allDone" />
+            <label for="toggle-all"></label>
+            <ul class="todo-list">
+                <li v-for="todo in filteredTodoList" class="todo" :key="todo.id"
+                    :class="{ completed: todo.completed, editing: todo == editedTodo }">
+                    <div class="view">
+                        <input class="toggle" type="checkbox" v-model="todo.completed" />
+                        <label class="lbl" @dblclick="editTodo(todo)">{{ todo.title }}</label>
+                        <button class="delete-todo" @click="deleteTodo(todo)"></button>
+                    </div>
+                    <input class="edit" type="text" v-model="todo.title" v-todo-focus="todo == editedTodo"
+                        @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" />
+                </li>
+            </ul>
+        </section>
+        <footer class="footer" v-show="todoList.length">
+            <span class="todo-count">
+                <strong class="strong">{{ remaining }}</strong> {{ remaining | checkIfPlural }} left
+            </span>
+            <ul class="filters">
+                <li>
+                    <a href="#/all" id="all" :class="{ selected: visibility == 'all' }">All</a>
+                </li>
+                <li>
+                    <a href="#/active" id="active" :class="{ selected: visibility == 'active' }">Active</a>
+                </li>
+                <li>
+                    <a href="#/completed" id="completed" :class="{ selected: visibility == 'completed' }">Completed</a>
+                </li>
+            </ul>
+            <button class="delete-completed" @click="deleteCompleted" v-show="todoList.length > remaining">Clear
+                completed</button>
+        </footer>
+    </section>
+    <footer class="info">
+        <p>Double-click to edit a todo</p>
+        <p>Written by Jonas Moss & Niclas Andrén</p>
+        <p>Part of Teknikhögskolan</p>
+    </footer>
+</body>
+
+</html>
